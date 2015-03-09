@@ -1,6 +1,6 @@
 var margin = {top: 20, right: 200, bottom: 30,left: 50},
-    width = $(".chart").width() - margin.left - margin.right,
-    height = $(".chart").height() - margin.top - margin.bottom;
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
 
 var parseDate = d3.time.format("%Y").parse;
 
@@ -28,14 +28,14 @@ var yAxis = d3.svg.axis()
 //More info here: http://stackoverflow.com/questions/15259444/drawing-non-continuous-lines-with-d3
 var line = d3.svg.line()
     .defined(function(d) {
-        return !isNaN(d.divorce)
+        return !isNaN(d.marriage)
     })
     .interpolate("basis")
     .x(function(d) {
         return x(d.date);
     })
     .y(function(d) {
-        return y(d.divorce);
+        return y(d.marriage);
     });
 
 var svg = d3.select(".chart").append("svg")
@@ -68,7 +68,7 @@ d3.selection.prototype.moveToBack = function() {
 
 
 
-d3.csv("js/divorce.csv", function(error, data) {
+d3.csv("js/marriage.csv", function(error, data) {
     //Mapped our states to the theStates scale instead of the color scale.
     //color.domain(d3.keys(data[0]).filter(function(key) { return key !== "year"; }));
     theStates.domain(d3.keys(data[0]).filter(function(key) {
@@ -90,7 +90,7 @@ d3.csv("js/divorce.csv", function(error, data) {
             values: data.map(function(d) {
                 return {
                     date: d.date,
-                    divorce: +d[name]
+                    marriage: +d[name]
                 };
             })
         };
@@ -104,12 +104,12 @@ d3.csv("js/divorce.csv", function(error, data) {
     y.domain([
         d3.min(states, function(c) {
             return d3.min(c.values, function(v) {
-                return v.divorce;
+                return v.marriage;
             });
         }),
         d3.max(states, function(c) {
             return d3.max(c.values, function(v) {
-                return v.divorce;
+                return v.marriage;
             });
         })
     ]);
@@ -127,7 +127,7 @@ d3.csv("js/divorce.csv", function(error, data) {
         //   .attr("y", 6)
         //   .attr("dy", ".71em")
         //   .style("text-anchor", "end")
-        //   .text("divorces");
+        //   .text("marriages");
 
     var state = svg.selectAll(".state")
         .data(states)
@@ -194,7 +194,7 @@ d3.csv("js/divorce.csv", function(error, data) {
         })
         .attr("transform", function(d) {
             console.log(d);
-            return "translate(" + width + "," + y(d.value.divorce) + ")";
+            return "translate(" + width + "," + y(d.value.marriage) + ")";
         })
         .attr("opacity", 0)
         .attr("x", 3)
