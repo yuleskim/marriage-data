@@ -10,9 +10,6 @@ var x = d3.time.scale()
 var y = d3.scale.linear()
     .range([height, 0]);
 
-//Got rid of the color scale because we don't want a rainbow of colors.
-// var color = d3.scale.category10();
-//Replaced the color scale with an ordinal scale to hold our state names
 var theStates = d3.scale.ordinal();
 
 var xAxis = d3.svg.axis()
@@ -23,9 +20,6 @@ var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left");
 
-//I added the defined() line here to account for our missing data
-//This lets us draw partial lines with gaps for years without data
-//More info here: http://stackoverflow.com/questions/15259444/drawing-non-continuous-lines-with-d3
 var line = d3.svg.line()
     .defined(function(d) {
         return !isNaN(d.marriage)
@@ -46,11 +40,6 @@ var svg = d3.select(".chart").append("svg")
 
 
 
-//moveToFront and moveToBack:
-//This is a bit of code that lets us move lines forward and backward in the view.
-//If we don't do that, our lines look like they're under other lines when we mouse over them.
-//These are called by adding ".moveToFront()" or ".moveToBack()" to the end of a selection.
-//More info here: http://stackoverflow.com/questions/14167863/how-can-i-bring-a-circle-to-the-front-with-d3
 d3.selection.prototype.moveToFront = function() {
     return this.each(function() {
         this.parentNode.appendChild(this);
@@ -69,8 +58,6 @@ d3.selection.prototype.moveToBack = function() {
 
 
 d3.csv("js/marriage.csv", function(error, data) {
-    //Mapped our states to the theStates scale instead of the color scale.
-    //color.domain(d3.keys(data[0]).filter(function(key) { return key !== "year"; }));
     theStates.domain(d3.keys(data[0]).filter(function(key) {
         return key !== "year";
     }));
@@ -80,10 +67,7 @@ d3.csv("js/marriage.csv", function(error, data) {
     });
 
 
-    //Added a 'nameStr' property that replaces all of the spaces in state names.
-    // replace(/ /g, "") replaces all spaces in a string with "", or no space.
-    //More info: http://www.w3schools.com/jsref/jsref_replace.asp
-    var states = theStates.domain().map(function(name) {
+     var states = theStates.domain().map(function(name) {
         return {
             name: name,
             nameStr: name.replace(/ /g, ""),
@@ -122,12 +106,7 @@ d3.csv("js/marriage.csv", function(error, data) {
     svg.append("g")
         .attr("class", "y axis")
         .call(yAxis)
-        // .append("text")
-        //   .attr("transform", "rotate(-90)")
-        //   .attr("y", 6)
-        //   .attr("dy", ".71em")
-        //   .style("text-anchor", "end")
-        //   .text("marriages");
+    
 
     var state = svg.selectAll(".state")
         .data(states)
@@ -145,12 +124,6 @@ d3.csv("js/marriage.csv", function(error, data) {
             "#CCC"
         })
 
-
-    //Added mouseover and mouseout to the lines
-    //Mouseover brings a line group to the front
-    //And colors in black
-    //Mouseout sends all of the line groups to the back
-    //And colors all of the lines grey
     d3.selectAll(".line")
         .on("mouseover", function(d) {
             d3.select(this)
