@@ -28,14 +28,14 @@ var yAxis = d3.svg.axis()
 //More info here: http://stackoverflow.com/questions/15259444/drawing-non-continuous-lines-with-d3
 var line = d3.svg.line()
     .defined(function(d) {
-        return !isNaN(d.divorces)
+        return !isNaN(d.divorce)
     })
     .interpolate("basis")
     .x(function(d) {
         return x(d.date);
     })
     .y(function(d) {
-        return y(d.divorces);
+        return y(d.divorce);
     });
 
 var svg = d3.select(".chart").append("svg")
@@ -90,7 +90,7 @@ d3.csv("js/divorce.csv", function(error, data) {
             values: data.map(function(d) {
                 return {
                     date: d.date,
-                    divorces: +d[name]
+                    divorce: +d[name]
                 };
             })
         };
@@ -104,12 +104,12 @@ d3.csv("js/divorce.csv", function(error, data) {
     y.domain([
         d3.min(states, function(c) {
             return d3.min(c.values, function(v) {
-                return v.divorces;
+                return v.divorce;
             });
         }),
         d3.max(states, function(c) {
             return d3.max(c.values, function(v) {
-                return v.divorces;
+                return v.divorce;
             });
         })
     ]);
@@ -194,7 +194,7 @@ d3.csv("js/divorce.csv", function(error, data) {
         })
         .attr("transform", function(d) {
             console.log(d);
-            return "translate(" + width + "," + y(d.value.divorces) + ")";
+            return "translate(" + width + "," + y(d.value.divorce) + ")";
         })
         .attr("opacity", 0)
         .attr("x", 3)
